@@ -13,6 +13,8 @@
 		6A7E36CA24783D7F00F72973 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A7E36C924783D7F00F72973 /* Assets.xcassets */; };
 		6A7E36CD24783D7F00F72973 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6A7E36CB24783D7F00F72973 /* LaunchScreen.storyboard */; };
 		6A7E36D824783E8600F72973 /* AlbumsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7E36D724783E8600F72973 /* AlbumsTableViewController.swift */; };
+		6A7E36DA247840AE00F72973 /* AlbumDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7E36D9247840AE00F72973 /* AlbumDetailTableViewController.swift */; };
+		6A7E36DD247841E200F72973 /* SongTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7E36DC247841E200F72973 /* SongTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		6A7E36CC24783D7F00F72973 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6A7E36CE24783D7F00F72973 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6A7E36D724783E8600F72973 /* AlbumsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsTableViewController.swift; sourceTree = "<group>"; };
+		6A7E36D9247840AE00F72973 /* AlbumDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumDetailTableViewController.swift; sourceTree = "<group>"; };
+		6A7E36DC247841E200F72973 /* SongTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				6A7E36D524783E1D00F72973 /* View Controllers */,
+				6A7E36DB247841BF00F72973 /* View */,
 				6A7E36D624783E2C00F72973 /* Controllers */,
 				6A7E36D424783E0100F72973 /* Models */,
 				6A7E36C624783D7D00F72973 /* Main.storyboard */,
@@ -80,6 +85,7 @@
 			isa = PBXGroup;
 			children = (
 				6A7E36D724783E8600F72973 /* AlbumsTableViewController.swift */,
+				6A7E36D9247840AE00F72973 /* AlbumDetailTableViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -89,6 +95,14 @@
 			children = (
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		6A7E36DB247841BF00F72973 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6A7E36DC247841E200F72973 /* SongTableViewCell.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -164,6 +178,8 @@
 			files = (
 				6A7E36C124783D7D00F72973 /* AppDelegate.swift in Sources */,
 				6A7E36D824783E8600F72973 /* AlbumsTableViewController.swift in Sources */,
+				6A7E36DD247841E200F72973 /* SongTableViewCell.swift in Sources */,
+				6A7E36DA247840AE00F72973 /* AlbumDetailTableViewController.swift in Sources */,
 				6A7E36C324783D7D00F72973 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
