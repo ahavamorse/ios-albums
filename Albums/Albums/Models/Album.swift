@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Album: Decodable {
+struct Album: Codable {
     
     enum CodingKeys: String, CodingKey {
         case artist
@@ -100,5 +100,41 @@ struct Album: Decodable {
         }
         
         self.coverArt = urls
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(name, forKey: .name)
+        try container.encode(artist, forKey: .artist)
+        try container.encode(id, forKey: .id)
+        
+        var coverArtContainer = container.nestedUnkeyedContainer(forKey: .coverArt)
+        for url in coverArt {
+            var urlContainer = coverArtContainer.nestedContainer(keyedBy: CodingKeys.CoverArtKeys.self)
+            try urlContainer.encode(url, forKey: .url)
+        }
+        
+        var genresContainer = container.nestedUnkeyedContainer(forKey: .genres)
+        
+        for genre in genres {
+            try genresContainer.encode(genre)
+        }
+        
+        var songsContainer = container.nestedUnkeyedContainer(forKey: .songs)
+        
+        for song in songs {
+            var songContainer = songsContainer.nestedContainer(keyedBy: CodingKeys.SongsKeys.self)
+            
+            var durationContainer = songContainer.nestedContainer(keyedBy: CodingKeys.SongsKeys.DurationKeys.self, forKey: .duration)
+            try durationContainer.encode(song.duration, forKey: .duration)
+            
+            try songContainer.encode(song.id, forKey: .id)
+            
+            var nameContainer = songContainer.nestedContainer(keyedBy: CodingKeys.SongsKeys.NameKeys.self, forKey: .name)
+            
+            try nameContainer.encode(song.title, forKey: .title)
+        }
+        
     }
 }
