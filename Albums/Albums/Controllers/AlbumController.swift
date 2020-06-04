@@ -10,6 +10,15 @@ import Foundation
 
 class AlbumController {
     
+    enum HTTPMethod: String {
+        case get = "GET"
+        case put = "PUT"
+        case post = "POST"
+        case delete = "DELETE"
+    }
+    
+    var albums: [Album] = []
+    let baseURL: URL = URL(string: "https://albums-50376.firebaseio.com/")!
     
     func testDecodingExampleAlbum() {
         let urlPath = Bundle.main.url(forResource: "exampleAlbum", withExtension: "json")
@@ -34,5 +43,101 @@ class AlbumController {
         let albumData = try! encoder.encode(album)
         let albumString = String(data: albumData, encoding: .utf8)
         print(albumString!)
+        
+        createAlbum(name: "Frozen Soundtrack", artist: "Jennifer Lee", id: "iLoveFrozen", genres: ["Soundtrack", "Kids"], songs: [createSong(title: "Do You Wanna Build a Snowman", duration: "2:30", id: "doYouWannaBuildASnowman")], coverArt: [URL(string: "https://helloworld.com")!])
+    }
+    
+    func getAlbums(completion: @escaping (Error?) -> ()) {
+        var request = URLRequest(url: baseURL)
+        request.httpMethod = HTTPMethod.get.rawValue
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                NSLog("Error receiving album data: \(error)")
+                completion(error)
+                return
+            }
+            
+            if let response = response as? HTTPURLResponse,
+            response.statusCode != 200 {
+                completion(NSError(domain: "", code: response.statusCode, userInfo: nil))
+                return
+            }
+            
+            guard let data = data else {
+                completion(NSError(domain: "Bad Data", code: 0, userInfo: nil))
+                return
+            }
+            
+            let decoder = JSONDecoder()
+            do {
+                let albums = try decoder.decode([String: Album].self, from: data)
+                self.albums = []
+                for (_, album) in albums {
+                    self.albums.append(album)
+                }
+                completion(nil)
+            } catch {
+                NSLog("Error decoding animal objects: \(error)")
+                completion(error)
+                return
+            }
+        }.resume()
+    }
+    
+    func put(album: Album) {
+        let addAlbumUrl = baseURL
+            .appendingPathComponent("\(album.id)")
+            .appendingPathExtension("json")
+        
+        var request = URLRequest(url: addAlbumUrl)
+        
+        request.httpMethod = HTTPMethod.put.rawValue
+        
+        let jsonEncoder = JSONEncoder()
+        do {
+            let jsonData = try jsonEncoder.encode(album)
+            request.httpBody = jsonData
+        } catch {
+            NSLog("Error encoding album ovject: \(error)")
+            return
+        }
+        
+        URLSession.shared.dataTask(with: request) { (_, response, error) in
+            if let error = error {
+                NSLog("Other error: \(error)")
+                return
+            }
+            
+            if let response = response as? HTTPURLResponse,
+                response.statusCode != 200 {
+                NSLog("Status code: \(response.statusCode)")
+                return
+            }
+        }.resume()
+    }
+    
+    func createAlbum(name: String, artist: String, id: String, genres: [String], songs: [Song], coverArt: [URL]) {
+        let album = Album(name: name, artist: artist, id: id, genres: genres, songs: songs, coverArt: coverArt)
+        self.albums.append(album)
+        put(album: album)
+    }
+    
+    func createSong(title: String, duration: String, id: String) -> Song {
+        let song = Song(title: title, duration: duration, id: id)
+        return song
+    }
+    
+    func update(album: Album, name: String, artist: String, id: String, genres: [String], songs: [Song], coverArt: [URL]) {
+        var album = album
+        
+        album.name = name
+        album.artist = artist
+        album.id = id
+        album.genres = genres
+        album.songs = songs
+        album.coverArt = coverArt
+        
+        put(album: album)
     }
 }

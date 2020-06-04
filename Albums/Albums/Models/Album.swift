@@ -44,6 +44,15 @@ struct Album: Codable {
     var songs: [Song]
     var coverArt: [URL]
     
+    init(name: String, artist: String, id: String, genres: [String], songs: [Song], coverArt: [URL]) {
+        self.name = name
+        self.artist = artist
+        self.id = id
+        self.genres = genres
+        self.songs = songs
+        self.coverArt = coverArt
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
