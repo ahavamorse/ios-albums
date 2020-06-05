@@ -44,7 +44,7 @@ class AlbumController {
         let albumString = String(data: albumData, encoding: .utf8)
         print(albumString!)
         
-        createAlbum(name: "Frozen Soundtrack", artist: "Jennifer Lee", id: "iLoveFrozen", genres: ["Soundtrack", "Kids"], songs: [createSong(title: "Do You Wanna Build a Snowman", duration: "2:30", id: "doYouWannaBuildASnowman")], coverArt: [URL(string: "https://helloworld.com")!])
+    update(album: Album(name: "Frozen Soundtrack", artist: "Jennifer Lee", id: "iLoveFrozen", genres: ["Soundtrack", "Kids"], songs: [createSong(title: "Do You Wanna Build a Snowman", duration: "2:30", id: "doYouWannaBuildASnowman")], coverArt: [URL(string: "https://helloworld.com")!]), name: "Frozen Soundtrack UPDATED", artist: "Jennifer Lee", id: "iLoveFrozen", genres: ["Soundtrack", "Kids"], songs: [createSong(title: "Do You Wanna Build a Snowman", duration: "2:30", id: "doYouWannaBuildASnowman")], coverArt: [URL(string: "https://helloworld.com")!])
     }
     
     func getAlbums(completion: @escaping (Error?) -> ()) {
