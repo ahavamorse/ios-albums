@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AlbumDetailTableViewController: UITableViewController {
+class AlbumDetailTableViewController: UITableViewController, SongTableViewCellDelegate {
     
     @IBOutlet weak var albumNameTextField: UITextField!
     @IBOutlet weak var artistTextField: UITextField!
@@ -16,39 +16,72 @@ class AlbumDetailTableViewController: UITableViewController {
     @IBOutlet weak var coverURLsTextField: UITextField!
     
     var albumController: AlbumController?
-    var album: Album?
+    var album: Album? {
+        didSet {
+            updateViews()
+        }
+    }
+    var tempSongs: [Song] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        updateViews()
+    }
+    
+    func updateViews() {
+        if let album = album {
+            albumNameTextField.text = album.name
+            artistTextField.text = album.artist
+            genresTextField.text = album.genres.joined(separator: ", ")
+            
+            var urlsString = ""
+            
+            for url in album.coverArt {
+                urlsString += "\(url)"
+            }
+            
+            coverURLsTextField.text = urlsString
+            
+            tempSongs = album.songs
+        } else {
+            albumNameTextField.text = "New Album"
+        }
+    }
+    
+    func addSong(with title: String, duration: String) {
+        if let albumController = albumController {
+            let song = albumController.createSong(title: title, duration: duration, id: title)
+            tempSongs.append(song)
+        }
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        tableView.reloadData()
+        tableView.scrollToRow(at: IndexPath(row: tempSongs.count, section: 0), at: .bottom, animated: true)
     }
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return tempSongs.count + 1
     }
 
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "songCell", for: indexPath) as? SongTableViewCell else { return UITableViewCell() }
+        cell.delegate = self
 
         return cell
     }
-    */
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if let albumController = albumController {
+            if indexPath.row == albumController.albums[indexPath.row].songs.count - 1 {
+                return 100
+            }
+        }
+        return 140
+    }
 
     /*
     // Override to support conditional editing of the table view.
@@ -95,6 +128,37 @@ class AlbumDetailTableViewController: UITableViewController {
     }
     */
     @IBAction func saveAlbum(_ sender: UIBarButtonItem) {
+        if let albumController = albumController,
+            let title = albumNameTextField.text,
+            let artist = artistTextField.text,
+            let genresText = genresTextField.text,
+            let coverArtUrlsText = coverURLsTextField.text {
+            if let album = album {
+                
+                let genresArray = genresText.split(separator: ",")
+                var genres: [String] = []
+                for substring in genresArray {
+                    let words = substring.split(separator: " ")
+                    let genre = words.joined(separator: " ")
+                    genres.append(genre)
+                }
+                
+                let urlArray = coverArtUrlsText.split(separator: ",")
+                var urls: [URL] = []
+                for substring in urlArray {
+                    let string = substring.description.replacingOccurrences(of: " ", with: "")
+                    if let url = URL(string: string) {
+                        urls.append(url)
+                    }
+                }
+                
+                albumController.update(album: album, name: title, artist: artist, id: title, genres: genres, songs: tempSongs, coverArt: urls)
+                
+            } else {
+                // TODO: Create new Album
+            }
+        }
+        
     }
     
 }
