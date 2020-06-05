@@ -15,6 +15,9 @@ class AlbumDetailTableViewController: UITableViewController {
     @IBOutlet weak var genresTextField: UITextField!
     @IBOutlet weak var coverURLsTextField: UITextField!
     
+    var albumController: AlbumController?
+    var album: Album?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

@@ -39,7 +39,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="fOF-Iw-Kms" kind="show" id="dC4-tB-Hfj"/>
+                                    <segue destination="fOF-Iw-Kms" kind="show" identifier="editAlbumSegue" id="dC4-tB-Hfj"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -51,7 +51,7 @@
                     <navigationItem key="navigationItem" id="5qH-4y-64F">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="KzO-TQ-xzr">
                             <connections>
-                                <segue destination="fOF-Iw-Kms" kind="show" id="1cr-my-0eY"/>
+                                <segue destination="fOF-Iw-Kms" kind="show" identifier="newAlbumSegue" id="1cr-my-0eY"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -191,6 +191,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="dC4-tB-Hfj"/>
+        <segue reference="1cr-my-0eY"/>
     </inferredMetricsTieBreakers>
 </document>
