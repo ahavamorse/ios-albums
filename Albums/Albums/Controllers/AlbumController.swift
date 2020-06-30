@@ -17,7 +17,7 @@ class AlbumController {
         case delete = "DELETE"
     }
     
-    var albums: [Album] = []
+    var albums: [Album] = [] 
     let baseURL: URL = URL(string: "https://albums-50376.firebaseio.com/")!
     
     func testDecodingExampleAlbum() {
@@ -43,15 +43,16 @@ class AlbumController {
         let albumData = try! encoder.encode(album)
         let albumString = String(data: albumData, encoding: .utf8)
         print(albumString!)
-        
-    update(album: Album(name: "Frozen Soundtrack", artist: "Jennifer Lee", id: "iLoveFrozen", genres: ["Soundtrack", "Kids"], songs: [createSong(title: "Do You Wanna Build a Snowman", duration: "2:30", id: "doYouWannaBuildASnowman")], coverArt: [URL(string: "https://helloworld.com")!]), name: "Frozen Soundtrack UPDATED", artist: "Jennifer Lee", id: "iLoveFrozen", genres: ["Soundtrack", "Kids"], songs: [createSong(title: "Do You Wanna Build a Snowman", duration: "2:30", id: "doYouWannaBuildASnowman")], coverArt: [URL(string: "https://helloworld.com")!])
     }
     
     func getAlbums(completion: @escaping (Error?) -> ()) {
-        var request = URLRequest(url: baseURL)
+        let getAlbumUrl = baseURL.appendingPathExtension("json")
+        
+        var request = URLRequest(url: getAlbumUrl)
         request.httpMethod = HTTPMethod.get.rawValue
         
         URLSession.shared.dataTask(with: request) { (data, response, error) in
+            
             if let error = error {
                 NSLog("Error receiving album data: \(error)")
                 completion(error)
@@ -78,7 +79,7 @@ class AlbumController {
                 }
                 completion(nil)
             } catch {
-                NSLog("Error decoding animal objects: \(error)")
+                NSLog("Error decoding album objects: \(error)")
                 completion(error)
                 return
             }
@@ -99,7 +100,7 @@ class AlbumController {
             let jsonData = try jsonEncoder.encode(album)
             request.httpBody = jsonData
         } catch {
-            NSLog("Error encoding album ovject: \(error)")
+            NSLog("Error encoding album object: \(error)")
             return
         }
         

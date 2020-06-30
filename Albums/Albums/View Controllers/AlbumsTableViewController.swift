@@ -10,15 +10,33 @@ import UIKit
 
 class AlbumsTableViewController: UITableViewController {
     
-    var albumController: AlbumController?
+    var albumController: AlbumController? = AlbumController()
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let albumController = albumController {
+            albumController.getAlbums { (error) in
+                if let error = error {
+                    NSLog("Error: \(error)")
+                }
+            }
+        }
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         if let albumController = albumController {
             albumController.getAlbums { (error) in
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
+                if let error = error {
+                    NSLog("Error: \(error)")
+                } else {
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
                 }
             }
         }
