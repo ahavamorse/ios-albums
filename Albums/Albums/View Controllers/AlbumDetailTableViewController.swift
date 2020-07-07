@@ -55,10 +55,10 @@ class AlbumDetailTableViewController: UITableViewController, SongTableViewCellDe
             let song = albumController.createSong(title: title, duration: duration, id: title)
             tempSongs.append(song)
         }
-        
+            
         tableView.reloadData()
         tableView.scrollToRow(at: IndexPath(row: tempSongs.count, section: 0), at: .bottom, animated: true)
-    }
+        }
 
     // MARK: - Table view data source
 
@@ -71,9 +71,7 @@ class AlbumDetailTableViewController: UITableViewController, SongTableViewCellDe
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "songCell", for: indexPath) as? SongTableViewCell else { return UITableViewCell() }
         cell.delegate = self
-        if let album = album,
-        indexPath.row < album.songs.count {
-//            cell.song = album.songs[indexPath.row]
+        if indexPath.row < tempSongs.count {
             cell.song = tempSongs[indexPath.row]
             cell.update()
         }
@@ -82,19 +80,14 @@ class AlbumDetailTableViewController: UITableViewController, SongTableViewCellDe
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if let albumController = albumController,
-            let album = album {
-//            if indexPath.row == albumController.albums[indexPath.row].songs.count - 1 {
-//                return 100
-//            }
-            if indexPath.row == album.songs.count - 1 {
-                return 100
-            }
+        
+        if indexPath.row <= tempSongs.count - 1 {
+            return 100
         }
         return 140
     }
 
-    @IBAction func saveAlbum(_ sender: UIBarButtonItem) {
+    @IBAction func saveAlbum(_ sender: Any) {
         if let albumController = albumController,
             let title = albumNameTextField.text,
             let artist = artistTextField.text,

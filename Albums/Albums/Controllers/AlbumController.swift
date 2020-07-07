@@ -77,6 +77,7 @@ class AlbumController {
                 for (_, album) in albums {
                     self.albums.append(album)
                 }
+                print("Order: \(self.albums[0].name), \(self.albums[1].name)")
                 completion(nil)
             } catch {
                 NSLog("Error decoding album objects: \(error)")
