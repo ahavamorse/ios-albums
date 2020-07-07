@@ -11,29 +11,17 @@ import UIKit
 class AlbumsTableViewController: UITableViewController {
     
     var albumController: AlbumController? = AlbumController()
+    var tempAlbums: [Album] = []
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let albumController = albumController {
-            albumController.getAlbums { (error) in
-                if let error = error {
-                    NSLog("Error: \(error)")
-                }
-            }
-        }
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
         
         if let albumController = albumController {
             albumController.getAlbums { (error) in
                 if let error = error {
                     NSLog("Error: \(error)")
                 } else {
+                    self.tempAlbums = albumController.albums
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
                     }
@@ -41,26 +29,25 @@ class AlbumsTableViewController: UITableViewController {
             }
         }
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
 
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let albumController = albumController {
-            return albumController.albums.count
-        }
-        return 0
+        return tempAlbums.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "AlbumCell", for: indexPath)
-
-        if let albumController = albumController {
-            let album = albumController.albums[indexPath.row]
-            
+        
+        let album = tempAlbums[indexPath.row]
+        
             cell.textLabel?.text = album.name
             cell.detailTextLabel?.text = album.artist
-        }
 
         return cell
     }
@@ -76,7 +63,12 @@ class AlbumsTableViewController: UITableViewController {
         } else if segue.identifier == "editAlbumSegue" {
             destination.albumController = albumController
             if let indexPath = tableView.indexPathForSelectedRow {
-                destination.album = albumController?.albums[indexPath.row]
+                albumController?.getAlbums(completion: { (error) in
+                    if let error = error {
+                        NSLog("Error getting albums when going to details: \(error)")
+                    }
+                })
+                destination.album = tempAlbums[indexPath.row]
             }
         }
     }
